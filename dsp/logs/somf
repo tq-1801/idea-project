@@ -1,0 +1,12 @@
+
+time="2021-07-13T18:15:05+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+time="2021-07-13T18:18:14+08:00" level=debug msg="SELECT count(1) FROM `z_department` [4.008ms]"
+time="2021-07-13T18:18:14+08:00" level=debug msg="SELECT * FROM `z_department` LIMIT 10 [504.3µs]"
+
+time="2021-07-13T19:11:01+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+
+time="2021-07-13T19:12:35+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+
+time="2021-07-13T19:18:55+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+time="2021-07-13T19:19:20+08:00" level=debug msg="SELECT count(1) FROM `z_department` [2.0417ms]"
+time="2021-07-13T19:19:20+08:00" level=debug msg="SELECT * FROM `z_department` LIMIT 10 [530.5µs]"
