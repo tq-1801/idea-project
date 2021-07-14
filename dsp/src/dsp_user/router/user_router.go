@@ -39,12 +39,11 @@ func Routers(router *gin.RouterGroup) {
 	*/
 	departmentluster := router.Group("dep")
 	{
-		//departmentluster.POST("/tree/list", DepartmentTreeList)
-		departmentluster.POST("/list", DepartmentFindList)
-		//departmentluster.POST("/list", DerartmentList)
-		//departmentluster.POST("/recursion/list", DepTreeList)
-		//departmentluster.POST("/create", DepartmentAdd)
-		//departmentluster.POST("/update", DepartmentUpdate)
-		//departmentluster.POST("/delete", DepartmentDel)
+		departmentluster.POST("find/list", DepartmentFindList)
+		departmentluster.POST("/recursion/list", DepartmentTreeList)
+		departmentluster.POST("/list", DepartmentFindByIdList)
+		departmentluster.POST("/create", DepartmentAdd)
+		departmentluster.POST("/update", DepartmentUpdate)
+		departmentluster.POST("/delete", DepartmentDel)
 	}
 }

@@ -76,7 +76,7 @@ func ReadConfig() bool {
 	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" { //开发模式
 		fileName = "src/config/config.ini"
 	} else { //部署模式
-		fileName = "/opt/somf/somf/conf/config.ini"
+		fileName = "/opt/dsp/dsp/conf/config.ini"
 	}
 	err := gcfg.ReadFileInto(&Cfg, fileName)
 	if err != nil {

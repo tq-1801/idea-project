@@ -18,7 +18,7 @@ func LoggerInit() *logrus.Logger {
 			logFilePath = dir + "/logs/"
 		}
 	} else { //部署模式
-		logFilePath = "/opt/somf/somf/logs/"
+		logFilePath = "/opt/dsp/dsp/logs/"
 	}
 	if err := os.MkdirAll(logFilePath, 0777); err != nil {
 		fmt.Println(err.Error())
