@@ -30,6 +30,7 @@ func DepartmentFindList(ctx *gin.Context) {
 	util.MsgLog(ctx,nil,"","","",err,data,count)
 }
 
+
 //递归部门查询
 func DepartmentTreeList(ctx *gin.Context){
 	var params map[string]interface{}

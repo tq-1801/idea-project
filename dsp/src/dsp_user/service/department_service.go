@@ -14,7 +14,7 @@ import (
  */
 
 /*
-查询部门
+查询部门列表
 */
 func DepartmentFindList(pojo cusfun.ParamsPOJO) (rst interface{}, err error, count int) {
 
@@ -22,13 +22,17 @@ func DepartmentFindList(pojo cusfun.ParamsPOJO) (rst interface{}, err error, cou
 	return res, err, count
 }
 
-//递归查询
+/*
+递归查询部门列表
+ */
 func DepTreeList(supId int) (rst interface{},err error,count int) {
 	res,count,err := dao.GetTreeList(supId)
 	return res,nil,count
 }
 
-//通过当前部门id查询下级部门
+/*
+通过当前部门id查询下级部门
+ */
 func DepFindByIdList(id int) (rst interface{},err error,count int){
 	res,count,err := dao.DepFindById(id)
 	return res,nil,count
@@ -62,7 +66,7 @@ func DepInsert(zDepartment model.Department) (department model.Department, err e
 		a := strconv.Itoa(zDepartment.SupId)
 		zDepartment.TreePath = a + "," + err
 	}
-	res, err := dao.DepInsert(zDepartment)
+	res,count,err := dao.DepInsert(zDepartment)
 	dao.DepIsLeafUpdate(zDepartment.SupId)
 
 	return res, err, count
@@ -73,9 +77,23 @@ func DepInsert(zDepartment model.Department) (department model.Department, err e
 部门更新
 */
 func DepartmentUpdate(zDepartment model.Department) (department model.Department, err error, count int) {
-	if zDepartment.ZDesc == "" {
-		zDepartment.ZDesc = "无描述"
+
+	res := dao.DepartmentById(zDepartment.Id)
+	//查询部门名称是否重复
+	if res.DepName != zDepartment.DepName {
+		if dao.DepFindByName(zDepartment.DepName) > 0 {
+			err := errors.New("部门名称已存在")
+			return zDepartment, err, 0
+		}
 	}
+	// 查询部门编号是否重复
+	if res.DepNumber != zDepartment.DepNumber {
+		if zDepartment.DepNumber != "" && dao.DepFindByNumber(zDepartment.DepNumber) > 0 {
+
+				err := errors.New("部门编号已存在")
+				return zDepartment, err, 0
+			}
+		}
 	// 定义父节点的路径
 	if zDepartment.TreePath == "" {
 		//调用方法找出上级的父节点路径
@@ -84,7 +102,7 @@ func DepartmentUpdate(zDepartment model.Department) (department model.Department
 		a := strconv.Itoa(zDepartment.SupId)
 		zDepartment.TreePath = a + "," + err
 	}
-	res, count, _ := dao.DepartmentUpdate(zDepartment)
+	res, count, err = dao.DepUpdate(zDepartment)
 	return res, nil, count
 }
 
@@ -116,16 +134,16 @@ func DepartmentDel(zDepartment model.Department) (department model.Department, e
 
 	}
 	//没有同级部门时，修改上级部门子节点为1之后在删除
-	if dao.DepartmentSupIdList(zDepartment.SupId) == 1 {
-		dao.DepartmentIsLeafSupIdUpdate(zDepartment.SupId)
+	if dao.DepartmentSupIdList(res.SupId) == 1 {
+		dao.DepartmentIsLeafSupIdUpdate(res.SupId)
 		//删除
-		res, err := dao.DepDel(zDepartment)
+		res, count,err:= dao.DepDel(zDepartment)
 		return res, err, count
 	}
 	//当有同级部门时，不做任何修改,直接删除
-	if dao.DepartmentSupIdList(zDepartment.SupId) > 1 {
+	if dao.DepartmentSupIdList(res.SupId) > 1 {
 		//删除
-		res, err := dao.DepDel(zDepartment)
+		res,count,err := dao.DepDel(zDepartment)
 		return res, err, count
 	}
 	return res, err, count

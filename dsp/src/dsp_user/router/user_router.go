@@ -10,18 +10,18 @@ func Routers(router *gin.RouterGroup) {
 	/*
 		用户
 	*/
-	//usercluster := router.Group("user")
-	//{
-	//	usercluster.POST("/list", UserList)
-	//	usercluster.POST("/create", UserAdd)
-	//	usercluster.POST("/update", UserUpdate)
-	//	usercluster.POST("/lock_update", UserLockUpdate)
-	//	usercluster.POST("/delete", UserDel)
-	//	//usercluster.POST("/pwd_update", ModifyPwd)
-	//	usercluster.POST("/pwd_reset", ResetPwd)
-	//	//usercluster.POST("/import", Import)
-	//	usercluster.POST("/export", Export)
-	//}
+	usercluster := router.Group("user")
+	{
+		usercluster.POST("/list", UserList)
+		usercluster.POST("/create", UserAdd)
+		usercluster.POST("/update", UserUpdate)
+		usercluster.POST("/lock_update", UserLockUpdate)
+		usercluster.POST("/delete", UserDel)
+		usercluster.POST("/pwd_update", ModifyPwd)
+		usercluster.POST("/pwd_reset", ResetPwd)
+		//usercluster.POST("/import", Import)
+		usercluster.POST("/export", Export)
+	}
 	//
 	///*
 	//	角色

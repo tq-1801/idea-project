@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="272da37b-dc5e-47db-8add-24c85fab895c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/dsp/src/dsp_user/model/z_authenticaction_policy.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dsp/src/dsp_user/model/z_password_policy.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dsp/src/util/cusfun/delete.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dsp/src/util/cusfun/google_auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dsp/src/util/cusfun/query.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dsp/src/util/cusfun/update.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/logs/dsp" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/logs/dsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/logs/dsp.20210714.log" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/logs/dsp.20210714.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/controller/department_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/controller/department_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/controller/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/controller/user_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/dao/department_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/dao/department_dao.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/dao/user_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/dao/user_dao.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/router/user_router.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/router/user_router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/service/department_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/service/department_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/dsp_user/service/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/dsp_user/service/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp/src/util/cusfun/create.go" beforeDir="false" afterPath="$PROJECT_DIR$/dsp/src/util/cusfun/create.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1vLcC62lJk51D0Uj0PMiv8RjcqP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="272da37b-dc5e-47db-8add-24c85fab895c" name="Default Changelist" comment="" />
+      <created>1626344678451</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1626344678451</updated>
+      <workItem from="1626344679770" duration="49000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+</project>

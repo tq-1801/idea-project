@@ -5,3 +5,6 @@ time="2021-07-14T14:01:35+08:00" level=info msg="replacing callback `[gorm:updat
 time="2021-07-14T14:07:58+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
 time="2021-07-14T16:23:11+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
 time="2021-07-14T16:25:51+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+time="2021-07-14T17:38:45+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+time="2021-07-14T17:41:37+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"
+time="2021-07-14T18:15:50+08:00" level=info msg="replacing callback `[gorm:update D:/GoProject/pkg/mod/gorm.io/driver/mysql@v1.0.5/mysql.go:68]` from %!v(MISSING)\n"

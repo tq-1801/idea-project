@@ -10,6 +10,7 @@ import (
  * @author  tianqiang
  * @date  2021/7/13 17:35
  */
+
 /*
 查询部门列表
 */
@@ -87,19 +88,16 @@ func DepFindById(id int) ([]model.Department,int,error)  {
 /*
 部门新增
 */
-func DepInsert(zDepartment model.Department) (model.Department,error) {
+func DepInsert(zDepartment model.Department) (model.Department, int, error) {
 
-	if zDepartment.ZDesc == "" {
-		zDepartment.ZDesc = "无描述"
-	}
 	zDepartment.IsLeaf = 1
 	zDepartment.IsInlay = 0
-	err := util.DbConn.Create(&zDepartment).Error
-	return zDepartment,err
+	count := util.DbConn.Create(&zDepartment).RowsAffected
+	return zDepartment, int(count), nil
 
 }
 
-//通过部门名称查询
+//通过部门名称查重
 func DepFindByName(name string) (count int64) {
 
 	util.DbConn.Table("z_department").Where("dep_name = ? ", name).Count(&count)
@@ -107,17 +105,15 @@ func DepFindByName(name string) (count int64) {
 
 }
 
-/*
-根据部门编号查询
-*/
+
+//根据部门编号查重
 func DepFindByNumber(depNumber string) (count int64) {
 	util.DbConn.Table("z_department").Where("dep_number = ? ", depNumber).Count(&count)
 	return count
 }
 
-/*
-通过父节点id，查询上级部门
-*/
+
+//通过父节点id，查询上级部门
 func DepFindBySupId(supId int) model.Department {
 
 	var DepFindBySupId model.Department
@@ -125,9 +121,8 @@ func DepFindBySupId(supId int) model.Department {
 	return DepFindBySupId
 }
 
-/*
-修改已增加的部门的上级部门的子节点为0
-*/
+
+//修改已增加的部门的上级部门的子节点为0
 func DepIsLeafUpdate(supId int) ([]model.Department, int, error) {
 	var count int
 	var DepartmentIsLeafUpdate []model.Department
@@ -139,7 +134,7 @@ func DepIsLeafUpdate(supId int) ([]model.Department, int, error) {
 /*
 部门更新
 */
-func DepartmentUpdate(zDepartment model.Department) (model.Department, int, error) {
+func DepUpdate(zDepartment model.Department) (model.Department, int, error) {
 	count := util.DbConn.Save(&zDepartment).RowsAffected
 	return zDepartment, int(count), nil
 }
@@ -147,54 +142,46 @@ func DepartmentUpdate(zDepartment model.Department) (model.Department, int, erro
 /*
 部门删除
 */
-func DepDel(zDepartment model.Department) (model.Department, error) {
-	err := util.DbConn.Delete(&zDepartment).Error
-	return zDepartment, err
+func DepDel(zDepartment model.Department) (model.Department,int, error) {
+	count := util.DbConn.Delete(&zDepartment).RowsAffected
+	return zDepartment,int(count),nil
 }
 
-/*
-查询部门下是否是初始化数据
-*/
+
+//通过id查询部门信息
 func DepartmentById(id int) (res model.Department) {
 	util.DbConn.Table("z_department").Where("id = ? ", id).First(&res)
 	return res
 }
 
-/*
-查询部门下是否有子部门
-*/
+
+//查询部门下是否有子部门
 func DepartmentFindBySupId(id int) (count int64) {
 	util.DbConn.Table("z_department").Where("sup_id = ? ", id).Count(&count)
 	return count
 }
 
-/*
-查询部门下是否有用户
-*/
+
+//查询部门下是否有用户
 func DepartmentFindById(id int) (count int64) {
 	util.DbConn.Table("z_user").Where("department_id = ? ", id).Count(&count)
 	return count
 }
 
-/*
-查询部门下是否有资产
-*/
+
+//查询部门下是否有资产
 func DepartmentFindId(id int) (count int64) {
 	util.DbConn.Table("z_res").Where("department_id = ? ", id).Count(&count)
 	return count
 }
 
-/*
-当执行删除操作时，查询同级别是否还有部门
-*/
+//当执行删除操作时，查询同级别是否还有部门
 func DepartmentSupIdList(supId int) (count int64) {
 	util.DbConn.Table("z_department").Where("sup_id = ?", supId).Count(&count)
 	return count
 }
 
-/*
-在删除后没有同级部门则修改已删除的部门的上级部门的子节点为1
-*/
+//在删除后没有同级部门则修改已删除的部门的上级部门的子节点为1
 func DepartmentIsLeafSupIdUpdate(supId int) ([]model.Department, int, error) {
 	var count int
 	var DepartmentIsLeafSupIdUpdate []model.Department
