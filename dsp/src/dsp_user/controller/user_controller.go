@@ -51,9 +51,9 @@ func UserAdd(ctx *gin.Context) {
 		util.Fail(ctx, "参数解析错误 ", "")
 		return
 	}
-	data,count,err := service.UserInsert(user)
+	data,err := service.UserInsert(user)
 
-	util.MsgLog(ctx,nil,"","","",err,data,count)
+	util.MsgLog(ctx,nil,"","","",err,data,1)
 
 }
 
@@ -127,13 +127,14 @@ func ModifyPwd(ctx *gin.Context) {
 		util.Fail(ctx, "参数缺失 ", "")
 		return
 	}
-	var userid string
+	//var userid string
 	//sessionInfo, err := cusfun.GetSessionInfo(c)
 	//userid := sessionInfo.UserId
+	userid := params["userid"].(string)
 	oldPwd := params["password"].(string)
 	newPwd := params["newpassword"].(string)
-	_, err = service.ModifyPwd(userid, oldPwd, newPwd)
-	util.MsgLog(ctx,nil,"","","",err,nil,1)
+	data, err, count := service.ModifyPwd(userid, oldPwd, newPwd)
+	util.MsgLog(ctx,nil,"","","",err,data,count)
 }
 
 /*
@@ -147,8 +148,8 @@ func ResetPwd(ctx *gin.Context) {
 		return
 	}
 	userid := params["uid"].(string)
-	_, err = service.ResetPwd(userid)
-	util.MsgLog(ctx,nil,"","","",err,nil,1)
+	data, err,count := service.ResetPwd(userid)
+	util.MsgLog(ctx,nil,"","","",err,data,count)
 }
 
 /*
@@ -173,6 +174,32 @@ func UserDel(ctx *gin.Context) {
 
 	util.MsgLog(ctx,nil,"","","",err,data,count)
 
+}
+
+//导入
+func Import(ctx *gin.Context) {
+	mfrom, err := ctx.MultipartForm()
+	if err != nil || mfrom.File == nil {
+		util.Fail(ctx, "文件缺失", "")
+		return
+	}
+
+	files, ok := mfrom.File["file"]
+	if !ok || len(files) == 0 {
+		util.Fail(ctx, "文件缺失", "")
+		return
+	}
+
+	reader, err := files[0].Open()
+	if err != nil {
+		util.Fail(ctx, "文件缺失", "")
+		return
+	}
+	defer reader.Close()
+
+	data, err := service.Import(reader, files[0].Size)
+
+	util.MsgLog(ctx,nil,"","","",err,data,1)
 }
 
 //导出

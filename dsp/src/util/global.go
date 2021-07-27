@@ -1,18 +1,22 @@
 package util
 
 import (
+	"github.com/sirupsen/logrus"
 	"log"
+	"sync"
 )
-
+var SessionMap sync.Map
+var CustomLogger *logrus.Logger
 //var Claims cusfun.CustomClaims
 func SysInit() {
-
 	ReadConfig()
+	CustomLogger = LoggerInit()
 	DbConnect()
 	RedisInit()
 	KafkaProducerInit()
 	InitEs()
 	//FuncInit()
+
 }
 
 func DbConnect() {

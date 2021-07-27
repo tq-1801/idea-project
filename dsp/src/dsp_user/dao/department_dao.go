@@ -4,6 +4,8 @@ import (
 	"dsp/src/dsp_user/model"
 	"dsp/src/util"
 	"dsp/src/util/cusfun"
+	"errors"
+	"strconv"
 )
 
 /**
@@ -14,12 +16,12 @@ import (
 /*
 查询部门列表
 */
-func DepFindList(pojo cusfun.ParamsPOJO) (res []model.Department, err error, total int) {
+func DepFindList(pojo cusfun.ParamsPOJO) ( []model.Department,int, error) {
 	var count int64
+	var depFindList []model.Department
 	db := util.DbConn.Model(&model.Department{})
-	err = cusfun.GetSqlByParams(db, pojo, &count).Find(&res).Error
-	total = int(count)
-	return
+	db = cusfun.GetSqlByParams(db, pojo, &count).Find(&depFindList)
+	return depFindList, int(count), nil
 }
 
 
@@ -88,53 +90,72 @@ func DepFindById(id int) ([]model.Department,int,error)  {
 /*
 部门新增
 */
-func DepInsert(zDepartment model.Department) (model.Department, int, error) {
+func DepInsert(zDepartment model.Department) (  model.Department, int, error) {
 
+	var department model.Department
+	if zDepartment.DepName == "" {
+		return zDepartment,0,errors.New("部门名称不能为空")
+	}
+	//查询部门名称是否重复
+	util.DbConn.Table("z_department").Where("dep_name = ? ", zDepartment.DepName).Take(&department)
+	if department.DepName == zDepartment.DepName {
+		return zDepartment,0,errors.New("部门名称已存在")
+	}
+	//查询部门编号是否重复
+	util.DbConn.Table("z_department").Where("dep_number = ? ", zDepartment.DepNumber).Take(&department)
+	if zDepartment.DepNumber != "" && department.DepNumber == zDepartment.DepNumber {
+		return zDepartment,0,errors.New("部门编号已存在")
+	}
 	zDepartment.IsLeaf = 1
 	zDepartment.IsInlay = 0
+	//定义父节点的路径
+	if zDepartment.TreePath == "" {
+		//找出上级的父节点路径
+		util.DbConn.Table("z_department").Where("id = ?", zDepartment.SupId).Take(&department)
+
+		//把父节点int类型转换为string 类型在加上上级部门的父节点路径
+		zDepartment.TreePath = strconv.Itoa(zDepartment.SupId) + "," + department.TreePath
+	}
+
 	count := util.DbConn.Create(&zDepartment).RowsAffected
+	//修改已增加的部门的上级部门的子节点为0
+	util.DbConn.Table("z_department").Where("id = ?", zDepartment.SupId).Update("is_leaf", 0)
+
 	return zDepartment, int(count), nil
 
-}
-
-//通过部门名称查重
-func DepFindByName(name string) (count int64) {
-
-	util.DbConn.Table("z_department").Where("dep_name = ? ", name).Count(&count)
-	return count
-
-}
-
-
-//根据部门编号查重
-func DepFindByNumber(depNumber string) (count int64) {
-	util.DbConn.Table("z_department").Where("dep_number = ? ", depNumber).Count(&count)
-	return count
-}
-
-
-//通过父节点id，查询上级部门
-func DepFindBySupId(supId int) model.Department {
-
-	var DepFindBySupId model.Department
-	util.DbConn.Table("z_department").Where("id = ?", supId).Take(&DepFindBySupId)
-	return DepFindBySupId
-}
-
-
-//修改已增加的部门的上级部门的子节点为0
-func DepIsLeafUpdate(supId int) ([]model.Department, int, error) {
-	var count int
-	var DepartmentIsLeafUpdate []model.Department
-
-	util.DbConn.Table("z_department").Where("id = ?", supId).Update("is_leaf", 0)
-	return DepartmentIsLeafUpdate, count, nil
 }
 
 /*
 部门更新
 */
 func DepUpdate(zDepartment model.Department) (model.Department, int, error) {
+
+	var department model.Department
+	var all model.Department
+
+	//通过部门id查询修改前的部门信息
+	util.DbConn.Table("z_department").Where("id = ? ", zDepartment.Id).First(&all)
+	if zDepartment.DepName == "" {
+		return zDepartment,1,errors.New("部门名称不能为空")
+	}
+	//判断部门名称是否重复
+	util.DbConn.Table("z_department").Where("dep_name = ? ", zDepartment.DepName).Take(&department)
+	if all.DepName != zDepartment.DepName && department.DepName == zDepartment.DepName {
+		return zDepartment,1,errors.New("部门名称已存在")
+	}
+	//判断部门编号是否重复
+	util.DbConn.Table("z_department").Where("dep_number = ? ", zDepartment.DepNumber).Take(&department)
+	if all.DepNumber != zDepartment.DepNumber && department.DepNumber == zDepartment.DepNumber {
+		return zDepartment,1,errors.New("部门编号已存在")
+	}
+	//定义父节点的路径
+	if zDepartment.TreePath == "" {
+		//查询上级部门的父节点路径
+		util.DbConn.Table("z_department").Where("id = ?", zDepartment.SupId).Take(&department)
+		//把父节点int类型转换为string 类型在加上上级部门的父节点路径
+		zDepartment.TreePath = strconv.Itoa(zDepartment.SupId) + "," + department.TreePath
+	}
+
 	count := util.DbConn.Save(&zDepartment).RowsAffected
 	return zDepartment, int(count), nil
 }
@@ -143,37 +164,51 @@ func DepUpdate(zDepartment model.Department) (model.Department, int, error) {
 部门删除
 */
 func DepDel(zDepartment model.Department) (model.Department,int, error) {
-	count := util.DbConn.Delete(&zDepartment).RowsAffected
-	return zDepartment,int(count),nil
+
+	var all model.Department
+	var department model.Department
+	var user model.User
+	var res model.Res
+
+	//通过部门id查询删除前的部门信息
+	util.DbConn.Table("z_department").Where("id = ? ", zDepartment.Id).First(&all)
+	//初始化数据不允许删除
+	if all.IsInlay == 1 {
+		return all,1, errors.New("初始化数据不可被删除")
+	}
+	//通过部门id查询部门下的子部门
+	util.DbConn.Table("z_department").Where("sup_id = ? ", zDepartment.Id).Take(&department)
+	//部门下有子部门不能被删除
+	if zDepartment.Id == department.Id {
+		return all,1, errors.New("当前部门下有子部门，需删除子部门后才能删除当前部门")
+	}
+	//查询部门下是否有用户
+	util.DbConn.Table("z_user").Where("department_id = ? and status != 0 ", zDepartment.Id).Take(&user)
+	//部门下有用户不能被删除
+	if zDepartment.Id == user.DepartmentId {
+		return all,1, errors.New("当前部门下有用户，不可被删除")
+	}
+	//查询部门下是否有资源
+	util.DbConn.Table("z_res").Where("department_id = ? and status != 0", zDepartment.Id).Take(&res)
+	//部门下有资源不能被删除
+	if zDepartment.Id == res.DepartmentId {
+		return all,1, errors.New("当前部门下有资源，不可被删除")
+	}
+	if DepartmentSupIdList(all.SupId) == 1 {
+		//没有同级部门时，修改上级部门子节点为1之后在删除
+		util.DbConn.Table("z_department").Where("id = ?", all.SupId).Update("is_leaf", 1)
+		//删除
+		count := util.DbConn.Delete(&zDepartment).RowsAffected
+		return zDepartment,int(count),nil
+	}
+	//当有同级部门时，不做任何修改,直接删除
+	if DepartmentSupIdList(all.SupId) > 1 {
+		count := util.DbConn.Delete(&zDepartment).RowsAffected
+		return zDepartment,int(count),nil
+	}
+	return zDepartment, 1, nil
 }
 
-
-//通过id查询部门信息
-func DepartmentById(id int) (res model.Department) {
-	util.DbConn.Table("z_department").Where("id = ? ", id).First(&res)
-	return res
-}
-
-
-//查询部门下是否有子部门
-func DepartmentFindBySupId(id int) (count int64) {
-	util.DbConn.Table("z_department").Where("sup_id = ? ", id).Count(&count)
-	return count
-}
-
-
-//查询部门下是否有用户
-func DepartmentFindById(id int) (count int64) {
-	util.DbConn.Table("z_user").Where("department_id = ? ", id).Count(&count)
-	return count
-}
-
-
-//查询部门下是否有资产
-func DepartmentFindId(id int) (count int64) {
-	util.DbConn.Table("z_res").Where("department_id = ? ", id).Count(&count)
-	return count
-}
 
 //当执行删除操作时，查询同级别是否还有部门
 func DepartmentSupIdList(supId int) (count int64) {
@@ -181,10 +216,4 @@ func DepartmentSupIdList(supId int) (count int64) {
 	return count
 }
 
-//在删除后没有同级部门则修改已删除的部门的上级部门的子节点为1
-func DepartmentIsLeafSupIdUpdate(supId int) ([]model.Department, int, error) {
-	var count int
-	var DepartmentIsLeafSupIdUpdate []model.Department
-	util.DbConn.Table("z_department").Where("id = ?", supId).Update("is_leaf", 1)
-	return DepartmentIsLeafSupIdUpdate, count, nil
-}
+

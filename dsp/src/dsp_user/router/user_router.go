@@ -19,20 +19,20 @@ func Routers(router *gin.RouterGroup) {
 		usercluster.POST("/delete", UserDel)
 		usercluster.POST("/pwd_update", ModifyPwd)
 		usercluster.POST("/pwd_reset", ResetPwd)
-		//usercluster.POST("/import", Import)
+		usercluster.POST("/import", Import)
 		usercluster.POST("/export", Export)
 	}
-	//
-	///*
-	//	角色
-	//*/
-	//rolecluster := router.Group("role")
-	//{
-	//	rolecluster.POST("/list", RoleList)
-	//	rolecluster.POST("/create", RoleAdd)
-	//	rolecluster.POST("/update", RoleUpdate)
-	//	rolecluster.POST("/delete", RoleDel)
-	//}
+
+	/*
+		角色
+	*/
+	rolecluster := router.Group("role")
+	{
+		rolecluster.POST("/list", RoleList)
+		rolecluster.POST("/create", RoleAdd)
+		rolecluster.POST("/update", RoleUpdate)
+		rolecluster.POST("/delete", RoleDel)
+	}
 
 	/*
 	   部门
